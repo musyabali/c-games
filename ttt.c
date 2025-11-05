@@ -7,8 +7,9 @@ int main (void)
 {
     char brd[3][3] = {{' ', ' ',' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
 
-    int x = 0; int o = 0;
+    int x = 0; 
     char move;
+    int ox;
 
     printf(
         "\n\n"
@@ -24,85 +25,44 @@ int main (void)
         "CHOOSE WHO'LL PLAY FIRST? 'X' OR 'O': "
     );
 
-    the_move: 
 
     scanf(" %c", &move);
     if (move == 'X' || move == 'x')
     {
-        goto x_move;
+        ox = 0;
     }
     else if (move =='O'|| move == 'o')
     {
-        goto o_move;
+        ox = 1;
     }
-
-    else {
-        printf("Oops! Invalid character! Enter either X or O: ");
-        goto the_move;
+    else 
+    {
+        //Sets the X as the default first player
+        ox = 0;
     }
 
     // The game loop begins
 
     while (1)
-
     {
+        if (ox%2==0) move = 'X';
+        else move = 'O';
+
         if (isbrdfull(brd))
         {
             printf("DRAW!\n");
             break;
         }
 
-        x_move:
-        printf("X: "); scanf("%d", &x);
-        int Xi = ((x)/10)-1; int Xj = ((x)%10)-1;
-        if (Xi >= 0 && Xi <= 2 && Xj >= 0 && Xj <= 2)
-        {
-            if (brd[Xi][Xj]==' ')
-            {
-                brd[Xi][Xj] = 'X';
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        printf("[%c]",brd[i][j]);
-                    }
-                    printf("\n");
-                }
-                
-            }
-            else 
-            {
-                printf("Invalid Move!\n");
-                goto x_move;
-            }
-        }
-        else 
-            {
-                printf("Invalid Move!\n");
-                goto x_move;
-            }
-        if (wincheck('X', brd))
-        {
-            printf("X wins!\n");
-            break;
-        }
+        printf("%c: ", move);
+        scanf("%d", &x);
         
-        // O starts here 
-
-        if (isbrdfull(brd))
+        int rw = ((x)/10)-1; int cl = ((x)%10)-1;
+        if (rw >= 0 && rw <= 2 && cl >= 0 && cl <= 2)
         {
-            printf("DRAW!\n");
-            break;
-        }
-
-        o_move:
-        printf("O: "); scanf("%d", &o);
-        int Oi = ((o)/10)-1; int Oj = ((o)%10)-1;
-        if (Oi >= 0 && Oi <= 2 && Oj >= 0 && Oj <= 2)
-        {
-            if (brd[Oi][Oj]==' ')
+            if (brd[rw][cl]==' ')
             {
-                brd[Oi][Oj] = 'O';
+                brd[rw][cl] = move;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
@@ -116,20 +76,20 @@ int main (void)
             else 
             {
                 printf("Invalid Move!\n");
-                goto o_move;
+                ox--;
             }
         }
         else 
             {
                 printf("Invalid Move!\n");
-                goto o_move;
+                ox--;
             }
-
-        if (wincheck('O', brd))
+        if (wincheck(move, brd))
         {
-            printf("O wins!\n");
+            printf("%c wins!\n", move);
             break;
         }
+        ox++;
     }
     return 0;
 }
