@@ -1,73 +1,83 @@
 #include <stdio.h>
 
-int isbrdfull (char brd[3][3]);
-int wincheck (char m, char brd[3][3]);
+int isboardfull (int size, char board[size][size]);
+int wincheck (char m, int size, char board[size][size]);
 
-int main (void) 
+int main (void)
 {
-    char brd[3][3] = {{' ', ' ',' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+	int size, playernum, move; //size defines the 2D dimension of the tic-tac-toe game board 
+	int count = 0;
+	char c; // to handle input 
+	
+	printf("Size of the BOARD? : "); // beware printing too large board or too small board (for too small you get an error)
+	while (scanf("%d", &size)!=1 || size < 3)
+	{
+		printf("Invalid Input. Try Again.\n");
+		printf("Size of the BOARD? : ");
+		while ((c = getchar()) != '\n') {}
+	} 	while ((c = getchar()) != '\n') {}
+	
+	printf("# of players?: ");
+	while (scanf("%d", &playernum)!=1 || playernum<2)
+	{
+		printf("Invalid Input\n");
+		if (playernum<2) printf("Minimum Number of Players are 2\n");
+		printf("# of players?: ");
+		while ((c = getchar()) != '\n') {}
+	}	while ((c = getchar()) != '\n') {}
 
-    int x = 0; 
-    char move;
-    int ox;
+	char board[size][size]; 
+	char player[playernum]; // Now, playernum and size have been initialized.
 
-    printf(
-        "\n\n"
-        "________________________________________\n"
-        "WELCOME TO THIS SIMPLE TIC-TAC-TOE GAME\n"
-        "========================================\n\n"
+	for (int i = 0; i < playernum; i++) // Asks players to choose their characters (A, B, C, ..., a, b, etc.)
+	{
+		printf("Player %d: ", i+1);
+		while (scanf(" %c", &player[i])!=1)
+		{
+			printf("Invalid Input. Just Type One Character.\n"
+			"# of players?: ");
+			while ((c = getchar()) != '\n') {}
+		}	while ((c = getchar()) != '\n') {}
+	}
 
-        "How to play moves?\n"
-        " # The moves are all like the indices of\n   a 3x3 matrices\n\n"
-        " # the allowed range is 11,12,13,21,...,33\n"
-        "________________________________________\n\n"
+	for	(int i=0; i < size; i++) //initializes the values of board and set all to blankspace
+	{
+	for (int j = 0; j < size; j++)
+	board[i][j] = ' ';
+	}
 
-        "CHOOSE WHO'LL PLAY FIRST? 'X' OR 'O': "
-    );
+	
 
+	while (1)
+	{
+        char current_player = player[count];
 
-    scanf(" %c", &move);
-    if (move == 'X' || move == 'x')
-    {
-        ox = 0;
-    }
-    else if (move =='O'|| move == 'o')
-    {
-        ox = 1;
-    }
-    else 
-    {
-        //Sets the X as the default first player
-        ox = 0;
-    }
-
-    // The game loop begins
-
-    while (1)
-    {
-        if (ox%2==0) move = 'X';
-        else move = 'O';
-
-        if (isbrdfull(brd))
+        if (isboardfull(size, board)) //if no cell have blankspace character, the game draws
         {
             printf("DRAW!\n");
             break;
         }
 
-        printf("%c: ", move);
-        scanf("%d", &x);
+        printf(" %c: ", current_player);
+
+	  while (scanf("%d", &move)!=1)
+	  {
+		printf("Invalid Move!\n");
+		printf(" %c: ", current_player);
+		while ((c = getchar()) != '\n') {}
+	  }	while ((c = getchar()) != '\n') {}
         
-        int rw = ((x)/10)-1; int cl = ((x)%10)-1;
-        if (rw >= 0 && rw <= 2 && cl >= 0 && cl <= 2)
+        int row_index = ((move)/10)-1; int column_index = ((move)%10)-1; // change moves (23) to rows_index(2) and column_index(3) of the cell of the board
+        if (row_index >= 0 && row_index <= size && column_index >= 0 && column_index <= size)
         {
-            if (brd[rw][cl]==' ')
+            if (board[row_index][column_index]==' ')
             {
-                brd[rw][cl] = move;
-                for (int i = 0; i < 3; i++)
+                board[row_index][column_index] = current_player;
+                for (int i = 0; i < size; i++)
                 {
-                    for (int j = 0; j < 3; j++)
+                    for (int j = 0; j < size; j++)
                     {
-                        printf("[%c]",brd[i][j]);
+                        printf("[%c]", board[i][j]);
                     }
                     printf("\n");
                 }
@@ -76,54 +86,81 @@ int main (void)
             else 
             {
                 printf("Invalid Move!\n");
-                ox--;
+                count--;
             }
         }
         else 
             {
                 printf("Invalid Move!\n");
-                ox--;
+                count--;
             }
-        if (wincheck(move, brd))
+        if (wincheck(current_player, size, board))
         {
-            printf("%c wins!\n", move);
+            printf("%c WINS!\n", current_player);
             break;
         }
-        ox++;
+        count++;
+
+	  if (count == playernum)
+	  {
+		count = 0;
+        }
+	  
     }
     return 0;
 }
 
-//USER-DEFINED FUNCTIONS
+//user-defined functions
 
-int isbrdfull (char brd[3][3])
+int isboardfull (int size, char board[size][size])
 {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < size; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < size; j++)
             {
-                if (brd[i][j] == ' ')
-                {
-                   return 0;
-                }
+            	if (board[i][j] == ' ')
+            	return 0;
             }
         }
     return 1;
 }
 
-int wincheck(char m, char brd[3][3])
+int wincheck(char m, int size, char board[size][size])
 {
-    if (
-            (brd[0][0] == m && brd[0][1] == m && brd[0][2] == m) ||
-            (brd[1][0] == m && brd[1][1] == m && brd[1][2] == m) ||
-            (brd[2][0] == m && brd[2][1] == m && brd[2][2] == m) ||
-            (brd[0][0] == m && brd[1][1] == m && brd[2][2] == m) ||
-            (brd[0][2] == m && brd[1][1] == m && brd[2][0] == m) ||
-            (brd[0][0] == m && brd[1][0] == m && brd[2][0] == m) ||
-            (brd[0][1] == m && brd[1][1] == m && brd[2][1] == m) ||
-            (brd[0][2] == m && brd[1][2] == m && brd[2][2] == m) 
-    )
-    {
-        return 1;
-    } else return 0;
+    int diagonalrule = 0;
+    int diagonalrule2 = 0;
+        for (int i = 0; i < size; i++)
+        {
+            int rowrule = 0;
+            int columnrule = 0;
+            for (int j = 0; j < size; j++)
+            {
+                if (board[i][j] == m) {rowrule++;}
+                if (rowrule == size) {
+                return 1;
+                }
+            }
+            
+            for (int k = 0; k < size; k++)
+            {
+                if (board[k][i] == m)
+                {columnrule++;}
+                if (columnrule == size) {
+                return 1;
+                }
+            }
+
+            if (board[i][i] == m)
+            {diagonalrule++;}
+            if (diagonalrule == size) {
+            return 1;
+            }
+
+            if (board[i][size-(i+1)] == m)
+            {diagonalrule2++;}
+            if (diagonalrule2 == size) {
+            return 1;
+            }
+        }
+    return 0;
 }
