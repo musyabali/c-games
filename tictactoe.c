@@ -9,8 +9,8 @@ int main (void)
 	int count = 0;
 	char c; // to handle input 
 	
-	printf("Size of the BOARD? : "); // beware printing too large board or too small board (for too small you get an error)
-	while (scanf("%d", &size)!=1 || size < 3)
+	printf("Size of the BOARD? : "); // print board range 3 to 9
+	while (scanf("%d", &size)!=1 || size < 3 || size > 9)
 	{
 		printf("Invalid Input. Try Again.\n");
 		printf("Size of the BOARD? : ");
@@ -107,6 +107,7 @@ int main (void)
         }
 	  
     }
+    getchar();
     return 0;
 }
 
