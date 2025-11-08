@@ -1,9 +1,9 @@
 # Dynamic Tic Tac Toe (C)
 
-A simple, beginner-friendly Tic Tac Toe game written in C. The board size and number of players are chosen at runtime so you can play on any square board (size > 2) with any number of players (> 1). The program reads moves, updates the board, and automatically checks for wins or a draw.
+A simple Tic Tac Toe game written in C. The board size and number of players are chosen at runtime so you can play on any square board (10 > size > 2) with any number of players (> 1). The program reads moves, updates the board, and automatically checks for wins or a draw.
 
 ## Description
-- Ask for board size (must be greater than 2).
+- Ask for board size between 3 and 9 (greater than 9 creates amguity for move numbers).
 - Ask for number of players (must be greater than 1).
 - Players take turns entering moves in the format rowcol (first digit = row, second = column).
 - The program detects and reports a win or a draw automatically.
@@ -22,11 +22,11 @@ Rows and columns are numbered starting at 1 up to the board size.
 ## Example (3×3, 2 players)
 - Player 1 uses X, Player 2 uses O (typical display; the program will label each player's mark).
 - Moves entered in order:
-  1. Player 1 -> `11`
-  2. Player 2 -> `12`
-  3. Player 1 -> `21`
-  4. Player 2 -> `22`
-  5. Player 1 -> `31`  (Player 1 wins with a vertical line in column 1)
+  1. X: `11`
+  2. O: `12`
+  3. X: `21`
+  4. O: `22`
+  5. X: `31`  (Player 1 wins with a vertical line in column 1)
 
 Board after Player 1's winning move:
 ```
@@ -34,7 +34,6 @@ Board after Player 1's winning move:
 [X] [O] [ ]
 [X] [ ] [ ]
 ```
-
 ## Compilation
 You need a C compiler such as gcc or clang.
 
@@ -44,8 +43,4 @@ gcc -std=c11 -O2 -Wall -Wextra -o tictactoe tictactoe.c
 Run:
 ./tictactoe
 
-Or just download the exe file
-
-(If your compiler outputs a different binary name, run that binary instead, e.g., `./a.out`.)
-
-Enjoy the game — it's a great way to practice C and basic game logic!
+ it's a great way to practice C and basic game logic!
